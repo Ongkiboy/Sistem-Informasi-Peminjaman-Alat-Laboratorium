@@ -3,18 +3,20 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Database\Factories\PenggunaFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Notifications\Notifiable;
 
 class Pengguna extends Authenticatable
 {
-    use Notifiable;
+    use HasFactory,Notifiable;
 
     protected $fillable = [
         'nama',
         'email',
         'password',
-        'nim',
+        'nim',  
         'role',
     ];
 

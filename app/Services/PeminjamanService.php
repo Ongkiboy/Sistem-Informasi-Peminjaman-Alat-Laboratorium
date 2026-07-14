@@ -43,4 +43,64 @@ class PeminjamanService
 	        ]);
 	    });
 	}
+	public function tolakPeminjaman(Peminjaman $peminjaman): void
+	{
+		// Guard: hanya bisa tolak status pending
+		if ($peminjaman->status !== 'pending') {
+			throw new \Exception('Hanya pengajuan berstatus pending yang bisa ditolak.');
+		}
+
+		DB::transaction(function () use ($peminjaman) {
+			// Lock baris alat sebelum ubah stok
+			$alat = $peminjaman->alat()->lockForUpdate()->first();
+
+			// Kembalikan stok — guard agar tidak melebihi total_stok
+			$stokBaru = min(
+				$alat->stok_tersedia + $peminjaman->jumlah,
+				$alat->total_stok
+			);
+			$alat->update(['stok_tersedia' => $stokBaru]);
+
+			$peminjaman->update([
+				'status'       => 'rejected',
+				'ditolak_pada' => now(),
+			]);
+		});
+	}
+	public function konfirmasiDiambil(Peminjaman $peminjaman): void
+	{
+		// Guard: hanya bisa dari status approved
+		if ($peminjaman->status !== 'approved') {
+			throw new \Exception('Hanya pengajuan berstatus approved yang bisa dikonfirmasi diambil.');
+		}
+
+		$peminjaman->update([
+			'status'          => 'borrowed',
+			'tanggal_diambil' => now(),
+		]);
+	}
+	public function konfirmasiPengembalian(Peminjaman $peminjaman): void
+	{
+		// Guard: hanya bisa dari status borrowed
+		if ($peminjaman->status !== 'borrowed') {
+			throw new \Exception('Hanya pengajuan berstatus borrowed yang bisa dikonfirmasi kembali.');
+		}
+
+		DB::transaction(function () use ($peminjaman) {
+			$alat = $peminjaman->alat()->lockForUpdate()->first();
+
+			// Guard wajib: stok_tersedia tidak boleh melebihi total_stok
+			$stokBaru = min(
+				$alat->stok_tersedia + $peminjaman->jumlah,
+				$alat->total_stok
+			);
+
+			$alat->update(['stok_tersedia' => $stokBaru]);
+
+			$peminjaman->update([
+				'status'                 => 'returned',
+				'tanggal_kembali_aktual' => now(),
+			]);
+		});
+	}
 }

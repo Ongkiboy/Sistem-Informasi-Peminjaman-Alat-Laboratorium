@@ -23,6 +23,9 @@ class DatabaseSeeder extends Seeder
         //     'email' => 'test@example.com',
         // ]);
 
+        Pengguna::factory()->count(10)->create();
+        Alat::factory()->count(10)->create();
+
         $this->call(
             PenggunaSeeder::class,
             AlatSeeder::class

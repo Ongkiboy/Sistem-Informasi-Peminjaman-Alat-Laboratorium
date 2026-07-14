@@ -10,8 +10,9 @@ use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 class AlatController extends Controller
 {
-    public function index(Request $request): AnonymousResourceCollection
+    public function indeks(Request $request): AnonymousResourceCollection
     {
+        
         $alat = Alat::query()
             ->when($request->filled('q'), function ($query) use ($request) {
                 $query->where('nama_alat', 'like', "%{$request->q}%")
@@ -19,6 +20,6 @@ class AlatController extends Controller
             })
             ->paginate(20);
 
-        return AlatResource::collection($alat);
+            return AlatResource::collection($alat);
     }
 }

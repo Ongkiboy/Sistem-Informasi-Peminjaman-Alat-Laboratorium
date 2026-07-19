@@ -2,6 +2,11 @@
 
 namespace App\Services;
 
+use App\Exceptions\StokTidakCukupException;
+use App\Models\Alat;
+use App\Models\Peminjaman;
+use Illuminate\Support\Facades\DB;
+
 class PeminjamanService
 {
     /**
@@ -42,6 +47,19 @@ class PeminjamanService
 	            'status'                  => 'pending',
 	        ]);
 	    });
+	}
+	public function setujuiPeminjaman(Peminjaman $peminjaman): void
+	{
+		// Guard: hanya bisa setujui status pending
+		if ($peminjaman->status !== 'pending') {
+			throw new \Exception('Hanya pengajuan berstatus pending yang bisa disetujui.');
+		}
+
+		// Tidak ada perubahan stok — stok sudah dikurangi sejak pengajuan dibuat.
+		$peminjaman->update([
+			'status'         => 'approved',
+			'disetujui_pada' => now(),
+		]);
 	}
 	public function tolakPeminjaman(Peminjaman $peminjaman): void
 	{

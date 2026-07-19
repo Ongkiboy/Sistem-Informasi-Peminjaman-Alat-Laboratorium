@@ -46,7 +46,7 @@ class AuthController extends Controller
     
     private function redirectBerdasarkanRole(): RedirectResponse
     {
-        return Auth::user()->is_admin ?
+        return Auth::user()->isAdmin() ?
             redirect()->route('admin.dashboard'):
             redirect()->route('mahasiswa.katalog');
     }

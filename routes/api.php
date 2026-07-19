@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\Api\AlatApiController;
+use App\Http\Controllers\Api\AlatController;
 use App\Http\Controllers\Api\RiwayatApiController;
 use App\Http\Controllers\Api\TokenApiController;
 use Illuminate\Support\Facades\Route;
@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Route;
 Route::prefix('v1')->group(function () {
 
     // Publik — Katalog Alat (tanpa auth)
-    Route::get('/alat', [AlatApiController::class, 'indeks'])
+    Route::get('/alat', [AlatController::class, 'indeks'])
         ->name('api.alat.indeks');
 
     // Auth Token (publik — untuk generate token)

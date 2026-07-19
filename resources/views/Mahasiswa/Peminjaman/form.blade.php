@@ -3,10 +3,10 @@
 
     <div class="max-w-xl">
         <div class="flex items-center gap-3 mb-6">
-            <a href="{{ route('mahasiswa.katalog') }}" class="text-gray-400 hover:text-gray-600 text-sm">
+            <a href="{{ route('mahasiswa.katalog') }}" class="text-gray-400 hover:text-gray-600 text-sm transition-colors duration-150">
                 ← Kembali ke Katalog
             </a>
-            <h1 class="text-xl font-bold text-gray-800">Ajukan Peminjaman</h1>
+            <h1 class="text-xl font-bold text-gray-900">Ajukan Peminjaman</h1>
         </div>
 
         {{-- Info Alat --}}
@@ -28,72 +28,37 @@
                 @csrf
                 <input type="hidden" name="alat_id" value="{{ $alat->id }}">
 
-                {{-- Jumlah --}}
-                <div class="mb-4">
-                    <label class="block text-sm font-medium text-gray-700 mb-1">
-                        Jumlah Unit <span class="text-red-500">*</span>
-                    </label>
-                    <input
-                        type="number"
-                        name="jumlah"
-                        value="{{ old('jumlah', 1) }}"
-                        min="1"
-                        max="{{ $alat->stok_tersedia }}"
-                        class="w-full border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500
-                               {{ $errors->has('jumlah') ? 'border-red-400' : 'border-gray-300' }}"
->
-                    <p class="text-gray-400 text-xs mt-1">Maksimal {{ $alat->stok_tersedia }} unit.</p>
-                    @error('jumlah')
-                        <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
-                    @enderror
-                </div>
+                <x-input-form
+                    label="Jumlah Unit"
+                    nama="jumlah"
+                    tipe="number"
+                    wajib
+                    :value="old('jumlah', 1)"
+                    min="1"
+                    :max="$alat->stok_tersedia"
+                    :bantuan="'Maksimal '.$alat->stok_tersedia.' unit.'" />
 
-                {{-- Tanggal Pinjam --}}
-                <div class="mb-4">
-                    <label class="block text-sm font-medium text-gray-700 mb-1">
-                        Tanggal Mulai Pinjam <span class="text-red-500">*</span>
-                    </label>
-                    <input
-                        type="date"
-                        name="tanggal_pinjam"
-                        value="{{ old('tanggal_pinjam') }}"
-                        min="{{ now()->addDay()->format('Y-m-d') }}"
-                        class="w-full border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500
-                               {{ $errors->has('tanggal_pinjam') ? 'border-red-400' : 'border-gray-300' }}"
->
-                    <p class="text-gray-400 text-xs mt-1">Minimal besok ({{ now()->addDay()->format('d M Y') }}).</p>
-                    @error('tanggal_pinjam')
-                        <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
-                    @enderror
-                </div>
+                <x-input-form
+                    label="Tanggal Mulai Pinjam"
+                    nama="tanggal_pinjam"
+                    tipe="date"
+                    wajib
+                    :value="old('tanggal_pinjam')"
+                    :min="now()->addDay()->format('Y-m-d')"
+                    :bantuan="'Minimal besok ('.now()->addDay()->format('d M Y').').'" />
 
-                {{-- Tanggal Rencana Kembali --}}
-                <div class="mb-6">
-                    <label class="block text-sm font-medium text-gray-700 mb-1">
-                        Tanggal Rencana Kembali <span class="text-red-500">*</span>
-                    </label>
-                    <input
-                        type="date"
-                        name="tanggal_rencana_kembali"
-                        value="{{ old('tanggal_rencana_kembali') }}"
-                        class="w-full border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500
-                               {{ $errors->has('tanggal_rencana_kembali') ? 'border-red-400' : 'border-gray-300' }}"
-                        id="inputTanggalKembali"
->
-                    <p class="text-gray-400 text-xs mt-1">Harus setelah tanggal mulai pinjam.</p>
-                    @error('tanggal_rencana_kembali')
-                        <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
-                    @enderror
-                </div>
+                <x-input-form
+                    label="Tanggal Rencana Kembali"
+                    nama="tanggal_rencana_kembali"
+                    tipe="date"
+                    wajib
+                    :value="old('tanggal_rencana_kembali')"
+                    id="inputTanggalKembali"
+                    bantuan="Harus setelah tanggal mulai pinjam." />
 
-                {{-- Submit Button --}}
-                <button
-                    type="submit"
-                    id="btnSubmit"
-                    class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2.5 rounded-lg text-sm transition"
->
+                <x-tombol tipe="submit" id="btnSubmit" class="w-full mt-2" ukuran="lg">
                     Kirim Pengajuan
-                </button>
+                </x-tombol>
             </form>
         </div>
     </div>
@@ -114,17 +79,15 @@
                 // Reset nilai tanggal kembali jika sudah tidak valid
                 if (inputKembali.value && inputKembali.value <= this.value) {
                     inputKembali.value = '';
-
-                    // Loading state saat form submit
-document.getElementById('formPeminjaman').addEventListener('submit', function () {
-    const btn = document.getElementById('btnSubmit');
-    btn.disabled = true;
-    btn.textContent = 'Mengirim...';
-    btn.classList.remove('bg-blue-600', 'hover:bg-blue-700');
-    btn.classList.add('bg-blue-400', 'cursor-not-allowed');
-});
                 }
             }
+        });
+
+        // Loading state saat form submit
+        document.getElementById('formPeminjaman').addEventListener('submit', function () {
+            const btn = document.getElementById('btnSubmit');
+            btn.disabled = true;
+            btn.textContent = 'Mengirim...';
         });
     </script>
     @endpush

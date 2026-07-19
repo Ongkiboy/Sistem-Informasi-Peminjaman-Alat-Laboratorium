@@ -13,7 +13,7 @@ class Alat extends Model
 {
     use SoftDeletes, HasFactory;
 
-    protected $table = 'alat';
+    protected $table = 'alats';
 
     protected $fillable = [
         'nama_alat', 'kode_barang', 'deskripsi',

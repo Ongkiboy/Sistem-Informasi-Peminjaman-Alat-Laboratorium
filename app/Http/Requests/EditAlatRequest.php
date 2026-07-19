@@ -26,7 +26,7 @@ class EditAlatRequest extends FormRequest
                 'max:50',
                 'alpha_dash',
                 // Unique kecuali untuk alat yang sedang diedit
-                Rule::unique('alat', 'kode_barang')->ignore($alatId),
+                Rule::unique('alats', 'kode_barang')->ignore($alatId),
             ],
             'deskripsi'  => ['nullable', 'string', 'max:1000'],
             'kondisi'    => ['required', 'in:baik,rusak_ringan,rusak_berat'],

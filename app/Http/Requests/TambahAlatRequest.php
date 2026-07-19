@@ -16,7 +16,7 @@ class TambahAlatRequest extends FormRequest
     {
         return [
             'nama_alat'   => ['required', 'string', 'max:150'],
-            'kode_barang' => ['required', 'string', 'max:50', 'alpha_dash', 'unique:alat,kode_barang'],
+            'kode_barang' => ['required', 'string', 'max:50', 'alpha_dash', 'unique:alats,kode_barang'],
             'deskripsi'   => ['nullable', 'string', 'max:1000'],
             'kondisi'     => ['required', 'in:baik,rusak_ringan,rusak_berat'],
             'total_stok'  => ['required', 'integer', 'min:1', 'max:9999'],

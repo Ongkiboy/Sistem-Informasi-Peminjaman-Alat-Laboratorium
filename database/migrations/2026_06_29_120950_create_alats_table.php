@@ -19,6 +19,7 @@ return new class extends Migration
             $table->enum('kondisi',['baik','rusak_ringan','rusak_berat'])->default('baik');
             $table->unsignedBigInteger('total_stok')->default(1);
             $table->unsignedBigInteger('stok_tersedia')->default(1);
+            $table->foreignId('dibuat_oleh')->nullable()->constrained('penggunas')->nullOnDelete();
             $table->timestamps();
             $table->softDeletes();
 

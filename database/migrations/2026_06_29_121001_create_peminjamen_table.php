@@ -13,13 +13,16 @@ return new class extends Migration
     {
         Schema::create('peminjaman', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
+            $table->foreignId('pengguna_id')->constrained('penggunas')->cascadeOnDelete();
             $table->foreignId('alat_id')->constrained('alats')->cascadeOnDelete();
             $table->unsignedBigInteger('jumlah');
             $table->date('tanggal_pinjam');
             $table->date('tanggal_rencana_kembali');
-            $table->date('tanggal_kembali_aktual')->nullable();
+            $table->dateTime('tanggal_diambil')->nullable();
+            $table->dateTime('tanggal_kembali_aktual')->nullable();
             $table->enum('status', ['pending', 'approved', 'rejected', 'borrowed', 'returned'])->default('pending');
+            $table->dateTime('disetujui_pada')->nullable();
+            $table->dateTime('ditolak_pada')->nullable();
             $table->text('catatan_admin')->nullable();
             $table->timestamps();
         });

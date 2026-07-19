@@ -17,15 +17,15 @@ class alatFactory extends Factory
      */
     public function definition(): array
     {
-        return [
-            
-            'nama_alat' => faker()->word(3, true),
-            'kode_barang' => fake()->unique(),
-            'deskripsi' => fake()->sentence(),
-            'kondisi' => fake()->randomElement(['baik','rusak_ringan','rusak_berat']),
-            'total_stok' => fake()->numberBetween(1, 50),
-            'stok_tersedia' => fake()->numberBetween(1, 50)
+        $totalStok = fake()->numberBetween(1, 50);
 
+        return [
+            'nama_alat'     => fake()->words(3, true),
+            'kode_barang'   => strtoupper(fake()->unique()->bothify('???-###')),
+            'deskripsi'     => fake()->sentence(),
+            'kondisi'       => fake()->randomElement(['baik', 'rusak_ringan', 'rusak_berat']),
+            'total_stok'    => $totalStok,
+            'stok_tersedia' => fake()->numberBetween(0, $totalStok),
         ];
     }
 }

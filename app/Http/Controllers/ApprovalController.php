@@ -35,7 +35,16 @@ class ApprovalController extends Controller
             ->paginate(15)
             ->withQueryString();
 
-        return view('admin.approval.indeks', compact('peminjaman', 'statusFilter'));
+        // Jumlah per status untuk badge di tab filter
+        $jumlahPerStatus = [
+            'pending'  => Peminjaman::where('status', 'pending')->count(),
+            'approved' => Peminjaman::where('status', 'approved')->count(),
+            'borrowed' => Peminjaman::where('status', 'borrowed')->count(),
+            'returned' => Peminjaman::where('status', 'returned')->count(),
+            'rejected' => Peminjaman::where('status', 'rejected')->count(),
+        ];
+
+        return view('admin.approval.indeks', compact('peminjaman', 'statusFilter', 'jumlahPerStatus'));
     }
 
     /**
@@ -44,15 +53,12 @@ class ApprovalController extends Controller
      */
     public function setujui(Peminjaman $peminjaman): RedirectResponse
     {
-        if ($peminjaman->status !== 'pending') {
+        try {
+            $this->peminjamanService->setujuiPeminjaman($peminjaman);
+        } catch (\Exception $e) {
             return redirect()->route('admin.approval.indeks')
-                ->with('error', 'Pengajuan ini tidak bisa disetujui (status bukan pending).');
+                ->with('error', $e->getMessage());
         }
-
-        $peminjaman->update([
-            'status'        => 'approved',
-            'disetujui_pada' => now(),
-        ]);
 
         return redirect()->route('admin.approval.indeks')
             ->with('success', 'Pengajuan berhasil disetujui.');

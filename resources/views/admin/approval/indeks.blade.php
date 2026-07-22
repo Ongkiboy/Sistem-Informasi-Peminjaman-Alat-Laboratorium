@@ -6,7 +6,7 @@
     </div>
 
     {{-- Filter Tab Status --}}
-    <div class="flex gap-2 mb-5 flex-wrap overflow-x-auto pb-1 -mx-1 px-1">
+    <div class="flex gap-2 mb-5 flex-wrap">
         @foreach(['semua' => 'Semua', 'pending' => 'Menunggu', 'approved' => 'Disetujui', 'borrowed' => 'Dipinjam', 'returned' => 'Dikembalikan', 'rejected' => 'Ditolak'] as $value => $label)
             @php $count = $jumlahPerStatus[$value] ?? null; @endphp
             <a href="{{ route('admin.approval.indeks', ['status' => $value]) }}"
@@ -31,14 +31,14 @@
                 <table class="min-w-full text-sm">
                     <thead class="bg-gray-50 border-b border-gray-200">
                         <tr>
-                            <th class="text-left px-4 py-3 font-medium text-gray-700">Mahasiswa</th>
-                            <th class="text-left px-4 py-3 font-medium text-gray-700">NIM</th>
-                            <th class="text-left px-4 py-3 font-medium text-gray-700">Alat</th>
-                            <th class="text-center px-4 py-3 font-medium text-gray-700">Jml</th>
-                            <th class="text-left px-4 py-3 font-medium text-gray-700">Tgl Pinjam</th>
-                            <th class="text-left px-4 py-3 font-medium text-gray-700">Tgl Rencana Kembali</th>
-                            <th class="text-center px-4 py-3 font-medium text-gray-700">Status</th>
-                            <th class="text-center px-4 py-3 font-medium text-gray-700">Aksi</th>
+                            <th class="text-left px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wide">Mahasiswa</th>
+                            <th class="text-left px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wide">NIM</th>
+                            <th class="text-left px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wide">Alat</th>
+                            <th class="text-center px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wide">Jml</th>
+                            <th class="text-left px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wide">Tgl Pinjam</th>
+                            <th class="text-left px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wide">Tgl Rencana Kembali</th>
+                            <th class="text-center px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wide">Status</th>
+                            <th class="text-center px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wide">Aksi</th>
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-gray-100">
@@ -80,7 +80,7 @@
         @else
             <div class="p-6">
                 <x-kondisi-kosong
-                    ikon="✅"
+                    ikon="check-circle"
                     pesan="Tidak ada pengajuan dengan filter ini."
                     :ctaLabel="$statusFilter !== 'semua' ? 'Lihat semua pengajuan' : null"
                     :ctaHref="$statusFilter !== 'semua' ? route('admin.approval.indeks', ['status' => 'semua']) : null" />

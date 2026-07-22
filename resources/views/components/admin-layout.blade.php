@@ -6,10 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>{{ $title ? $title . ' — Admin — SIPLAB' : 'Admin — SIPLAB' }}</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
+    @include('partials.head-assets')
     @stack('styles')
 </head>
 <body class="bg-gray-50 text-gray-900 min-h-screen">
@@ -29,7 +26,10 @@
 
         {{-- Logo --}}
         <div class="px-5 py-5 border-b border-gray-100">
-            <div class="text-xl font-bold text-blue-600">🔬 SIPLAB</div>
+            <div class="text-xl font-bold text-blue-600 flex items-center gap-2">
+                <x-ikon nama="beaker" ukuran="md" />
+                SIPLAB
+            </div>
             <div class="text-[10px] font-semibold text-blue-400 uppercase tracking-widest mt-0.5">Admin Panel</div>
         </div>
 
@@ -37,11 +37,10 @@
         <nav class="flex-1 p-3 space-y-0.5">
             @php
                 $navItems = [
-                    ['route' => 'admin.dashboard', 'icon' => '📊', 'label' => 'Dashboard'],
-                    ['route' => 'admin.alat.indeks', 'icon' => '📦', 'label' => 'Kelola Alat'],
-                    ['route' => 'admin.approval.indeks', 'icon' => '📋', 'label' => 'Pengajuan'],
+                    ['route' => 'admin.dashboard', 'icon' => 'chart-bar', 'label' => 'Dashboard'],
+                    ['route' => 'admin.alat.indeks', 'icon' => 'archive-box', 'label' => 'Kelola Alat'],
+                    ['route' => 'admin.approval.indeks', 'icon' => 'clipboard-list', 'label' => 'Pengajuan'],
                 ];
-                $pendingCount = \App\Models\Peminjaman::where('status', 'pending')->count();
             @endphp
 
             @foreach($navItems as $item)
@@ -49,7 +48,7 @@
                 <a href="{{ route($item['route']) }}"
                    class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all duration-150
                           {{ $aktif ? 'bg-blue-50 text-blue-700' : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50' }}">
-                    <span class="text-base">{{ $item['icon'] }}</span>
+                    <x-ikon :nama="$item['icon']" ukuran="sm" class="flex-shrink-0" />
                     <span>{{ $item['label'] }}</span>
 
                     @if($item['route'] === 'admin.approval.indeks' && $pendingCount > 0)
@@ -70,7 +69,7 @@
             <form action="{{ route('logout') }}" method="POST">
                 @csrf
                 <button class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-red-600 hover:bg-red-50 transition-colors duration-150">
-                    <span>🚪</span> Logout
+                    <x-ikon nama="logout" ukuran="sm" /> Logout
                 </button>
             </form>
         </div>
@@ -86,10 +85,12 @@
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
                 </svg>
             </button>
-            <span class="text-lg font-bold text-blue-600">🔬 SIPLAB</span>
+            <span class="text-lg font-bold text-blue-600 flex items-center gap-1.5">
+                <x-ikon nama="beaker" ukuran="sm" /> SIPLAB
+            </span>
         </header>
 
-        <main class="flex-1 p-4 sm:p-6">
+        <main class="flex-1 p-4 sm:p-6 w-full max-w-7xl mx-auto">
             <x-pesan-flash />
             {{ $slot }}
         </main>

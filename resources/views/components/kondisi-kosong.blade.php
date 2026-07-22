@@ -1,4 +1,4 @@
-@props(['ikon' => '📦', 'judul' => null, 'pesan', 'ctaLabel' => null, 'ctaHref' => null])
+@props(['ikon' => 'archive-box', 'judul' => null, 'pesan', 'ctaLabel' => null, 'ctaHref' => null])
 
 <div class="bg-white rounded-2xl border-2 border-dashed border-gray-200 py-16 px-6 text-center relative overflow-hidden">
     <div class="absolute inset-0 opacity-30"
@@ -6,8 +6,8 @@
     </div>
 
     <div class="relative">
-        <div class="inline-flex h-20 w-20 rounded-full bg-blue-50 items-center justify-center text-4xl mb-4 mx-auto">
-            {{ $ikon }}
+        <div class="inline-flex h-20 w-20 rounded-full bg-blue-50 items-center justify-center text-blue-400 mb-4 mx-auto">
+            <x-ikon :nama="$ikon" ukuran="xl" />
         </div>
 
         @if($judul)

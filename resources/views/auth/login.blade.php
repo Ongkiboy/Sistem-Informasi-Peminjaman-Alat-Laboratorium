@@ -4,10 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login — SIPLAB</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
+    @include('partials.head-assets')
 </head>
 <body class="min-h-screen flex">
 
@@ -19,14 +16,18 @@
              style="background-image: radial-gradient(circle, #ffffff 1px, transparent 1px); background-size: 24px 24px;"></div>
 
         <div class="relative text-center text-white">
-            <div class="text-7xl mb-4">🔬</div>
+            <div class="inline-flex h-20 w-20 rounded-2xl bg-white/10 items-center justify-center mb-4">
+                <x-ikon nama="beaker" ukuran="xl" />
+            </div>
             <h1 class="text-4xl font-bold">SIPLAB</h1>
             <p class="text-blue-100 mt-3 text-lg">Sistem Informasi Peminjaman<br>Alat Laboratorium</p>
 
             <div class="mt-10 space-y-3 text-left">
                 @foreach(['Pantau stok alat real-time', 'Ajukan peminjaman kapan saja', 'Approval cepat dari admin'] as $fitur)
                     <div class="flex items-center gap-3 text-blue-100">
-                        <span class="h-5 w-5 rounded-full bg-white/20 flex items-center justify-center text-xs flex-shrink-0">✓</span>
+                        <span class="h-5 w-5 rounded-full bg-white/20 flex items-center justify-center flex-shrink-0">
+                            <x-ikon nama="check" ukuran="xs" />
+                        </span>
                         <span class="text-sm">{{ $fitur }}</span>
                     </div>
                 @endforeach
@@ -39,7 +40,9 @@
         <div class="w-full max-w-sm">
             {{-- Logo mobile only --}}
             <div class="text-center mb-8 lg:hidden">
-                <div class="text-5xl">🔬</div>
+                <div class="inline-flex h-14 w-14 rounded-2xl bg-blue-50 items-center justify-center text-blue-600">
+                    <x-ikon nama="beaker" ukuran="lg" />
+                </div>
                 <h1 class="text-2xl font-bold text-gray-900 mt-2">SIPLAB</h1>
                 <p class="text-sm text-gray-500">Sistem Informasi Peminjaman Alat Laboratorium</p>
             </div>
@@ -52,7 +55,7 @@
                 {{-- Flash Error Global --}}
                 @if (session('error'))
                     <div class="bg-red-50 border border-red-200 text-red-700 rounded-lg px-4 py-3 mb-5 text-sm flex items-start gap-2">
-                        <span>⚠️</span>
+                        <x-ikon nama="exclamation-triangle" ukuran="sm" class="flex-shrink-0" />
                         <span>{{ session('error') }}</span>
                     </div>
                 @endif
@@ -94,7 +97,8 @@
                                        {{ $errors->has('password') ? 'border-red-500 focus:ring-red-500' : 'border-gray-300' }}">
                             <button type="button" @click="tampil = !tampil" aria-label="Tampilkan password"
                                     class="absolute right-0 inset-y-0 flex items-center pr-3 text-gray-400 hover:text-gray-600 transition-colors duration-150">
-                                <span x-text="tampil ? '🙈' : '👁'"></span>
+                                <span x-show="!tampil" x-cloak><x-ikon nama="eye" ukuran="sm" /></span>
+                                <span x-show="tampil" x-cloak><x-ikon nama="eye-slash" ukuran="sm" /></span>
                             </button>
                         </div>
                         @error('password')

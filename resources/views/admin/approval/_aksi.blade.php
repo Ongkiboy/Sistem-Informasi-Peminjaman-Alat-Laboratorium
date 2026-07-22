@@ -25,21 +25,20 @@
         <form method="POST" action="{{ route('admin.approval.diambil', $item) }}">
             @csrf
             @method('PATCH')
-            <button type="submit"
-                    class="text-xs font-medium px-3 py-1.5 rounded-lg bg-purple-600 hover:bg-purple-700 text-white transition-all duration-200">
-                Konfirmasi Diambil
-            </button>
+            <x-tombol varian="ungu" ukuran="sm" tipe="submit">Konfirmasi Diambil</x-tombol>
         </form>
 
     @elseif($item->status === 'borrowed')
         {{-- Konfirmasi Kembali --}}
-        <form method="POST" action="{{ route('admin.approval.kembali', $item) }}">
+        <form method="POST" action="{{ route('admin.approval.kembali', $item) }}" class="flex items-center gap-2">
             @csrf
             @method('PATCH')
-            <button type="submit"
-                    class="text-xs font-medium px-3 py-1.5 rounded-lg bg-green-600 hover:bg-green-700 text-white transition-all duration-200">
-                Konfirmasi Kembali
-            </button>
+            <select name="kondisi_kembali" class="text-xs border border-gray-300 rounded-lg px-2 py-1.5 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                <option value="baik">Baik</option>
+                <option value="rusak_ringan">Rusak Ringan</option>
+                <option value="rusak_berat">Rusak Berat</option>
+            </select>
+            <x-tombol varian="sukses" ukuran="sm" tipe="submit">Konfirmasi Kembali</x-tombol>
         </form>
 
     @else

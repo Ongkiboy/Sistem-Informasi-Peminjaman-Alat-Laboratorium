@@ -1,8 +1,8 @@
 @php
     $peta = [
-        'success' => ['bg-green-50 border-green-200 text-green-800', '✅'],
-        'error'   => ['bg-red-50 border-red-200 text-red-800', '⚠️'],
-        'info'    => ['bg-blue-50 border-blue-200 text-blue-800', 'ℹ️'],
+        'success' => ['bg-green-50 border-green-200 text-green-800', 'check-circle'],
+        'error'   => ['bg-red-50 border-red-200 text-red-800', 'exclamation-triangle'],
+        'info'    => ['bg-blue-50 border-blue-200 text-blue-800', 'info-circle'],
     ];
     $durasi = ['success' => 4000, 'error' => 5000, 'info' => 3000];
 @endphp
@@ -16,10 +16,12 @@
              x-transition
              class="mb-4 p-4 border rounded-lg flex items-center justify-between {{ $kelas }}">
             <span class="flex items-center gap-2">
-                <span class="font-bold">{{ $ikon }}</span>
+                <x-ikon :nama="$ikon" ukuran="sm" class="flex-shrink-0" />
                 <span>{{ session($tipe) }}</span>
             </span>
-            <button @click="tampil = false" aria-label="Tutup notifikasi" class="opacity-60 hover:opacity-100 transition-opacity">✕</button>
+            <button @click="tampil = false" aria-label="Tutup notifikasi" class="opacity-60 hover:opacity-100 transition-opacity">
+                <x-ikon nama="x-mark" ukuran="sm" />
+            </button>
         </div>
     @endif
 @endforeach

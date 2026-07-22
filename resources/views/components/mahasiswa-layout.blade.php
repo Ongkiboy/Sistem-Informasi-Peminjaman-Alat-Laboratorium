@@ -3,7 +3,7 @@
         <nav class="bg-white border-b border-gray-100 sticky top-0 z-30">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex items-center justify-between">
                 <a href="{{ route('mahasiswa.katalog') }}" class="text-xl font-bold text-blue-600 flex items-center gap-1.5">
-                    🔬 SIPLAB
+                    <x-ikon nama="beaker" ukuran="md" /> SIPLAB
                 </a>
 
                 <div class="flex items-center gap-1">

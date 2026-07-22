@@ -21,9 +21,9 @@
                     <p class="text-3xl font-bold text-gray-900 mt-2">{{ $statistik['total_alat'] }}</p>
                     <p class="text-xs text-gray-400 mt-1">jenis alat aktif</p>
                 </div>
-                <div class="h-10 w-10 rounded-xl bg-blue-100 flex items-center justify-center text-lg
+                <div class="h-10 w-10 rounded-xl bg-blue-100 flex items-center justify-center text-blue-600
                             group-hover:scale-110 transition-transform duration-200">
-                    📦
+                    <x-ikon nama="archive-box" ukuran="md" />
                 </div>
             </div>
         </a>
@@ -38,9 +38,9 @@
                     <p class="text-3xl font-bold text-purple-600 mt-2">{{ $statistik['peminjaman_aktif'] }}</p>
                     <p class="text-xs text-gray-400 mt-1">approved + borrowed</p>
                 </div>
-                <div class="h-10 w-10 rounded-xl bg-purple-100 flex items-center justify-center text-lg
+                <div class="h-10 w-10 rounded-xl bg-purple-100 flex items-center justify-center text-purple-600
                             group-hover:scale-110 transition-transform duration-200">
-                    🔬
+                    <x-ikon nama="beaker" ukuran="md" />
                 </div>
             </div>
         </a>
@@ -59,28 +59,28 @@
                             Perlu ditinjau
                         </p>
                     @else
-                        <p class="text-xs text-green-600 mt-1">Semua beres ✅</p>
+                        <p class="text-xs text-green-600 mt-1 flex items-center gap-1">
+                            <x-ikon nama="check-circle" ukuran="xs" /> Semua beres
+                        </p>
                     @endif
                 </div>
-                <div class="h-10 w-10 rounded-xl bg-yellow-100 flex items-center justify-center text-lg
+                <div class="h-10 w-10 rounded-xl bg-yellow-100 flex items-center justify-center text-yellow-600
                             group-hover:scale-110 transition-transform duration-200">
-                    📋
+                    <x-ikon nama="clipboard-list" ukuran="md" />
                 </div>
             </div>
         </a>
 
-        {{-- Bulan Ini --}}
-        <div class="bg-white rounded-xl border border-gray-200 p-5
-                    hover:shadow-lg transition-all duration-200 group">
+        {{-- Bulan Ini — bukan link, tidak difilter ke halaman lain sehingga sengaja tidak diberi gaya interaktif (border/scale hover) agar tidak terkesan bisa diklik --}}
+        <div class="bg-white rounded-xl border border-gray-200 p-5">
             <div class="flex items-start justify-between">
                 <div>
                     <p class="text-xs font-semibold text-gray-500 uppercase tracking-wide">Bulan Ini</p>
                     <p class="text-3xl font-bold text-gray-900 mt-2">{{ $statistik['total_bulan_ini'] }}</p>
                     <p class="text-xs text-gray-400 mt-1">total pengajuan</p>
                 </div>
-                <div class="h-10 w-10 rounded-xl bg-green-100 flex items-center justify-center text-lg
-                            group-hover:scale-110 transition-transform duration-200">
-                    📈
+                <div class="h-10 w-10 rounded-xl bg-green-100 flex items-center justify-center text-green-600">
+                    <x-ikon nama="chart-trending-up" ukuran="md" />
                 </div>
             </div>
         </div>
@@ -102,12 +102,12 @@
                 <table class="min-w-full text-sm">
                     <thead class="bg-gray-50 border-b border-gray-100">
                         <tr>
-                            <th class="text-left px-4 py-2.5 font-medium text-gray-600 text-xs">Mahasiswa</th>
-                            <th class="text-left px-4 py-2.5 font-medium text-gray-600 text-xs">Alat</th>
-                            <th class="text-center px-4 py-2.5 font-medium text-gray-600 text-xs">Jml</th>
-                            <th class="text-left px-4 py-2.5 font-medium text-gray-600 text-xs">Waktu</th>
-                            <th class="text-center px-4 py-2.5 font-medium text-gray-600 text-xs">Status</th>
-                            <th class="text-center px-4 py-2.5 font-medium text-gray-600 text-xs">Aksi</th>
+                            <th class="text-left px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wide">Mahasiswa</th>
+                            <th class="text-left px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wide">Alat</th>
+                            <th class="text-center px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wide">Jml</th>
+                            <th class="text-left px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wide">Waktu</th>
+                            <th class="text-center px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wide">Status</th>
+                            <th class="text-center px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wide">Aksi</th>
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-gray-50">
@@ -137,7 +137,7 @@
                 </table>
             </div>
         @else
-            <x-kondisi-kosong ikon="📋" pesan="Belum ada pengajuan peminjaman." />
+            <x-kondisi-kosong pesan="Belum ada pengajuan peminjaman." />
         @endif
     </div>
 

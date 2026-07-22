@@ -32,12 +32,12 @@
                 <table class="min-w-full text-sm">
                     <thead class="bg-gray-50 border-b border-gray-200">
                         <tr>
-                            <th class="text-left px-4 py-3 font-medium text-gray-700">Nama Alat</th>
-                            <th class="text-left px-4 py-3 font-medium text-gray-700">Kode</th>
-                            <th class="text-left px-4 py-3 font-medium text-gray-700">Kondisi</th>
-                            <th class="text-center px-4 py-3 font-medium text-gray-700">Total Stok</th>
-                            <th class="text-center px-4 py-3 font-medium text-gray-700">Tersedia</th>
-                            <th class="text-center px-4 py-3 font-medium text-gray-700">Aksi</th>
+                            <th class="text-left px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wide">Nama Alat</th>
+                            <th class="text-left px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wide">Kode</th>
+                            <th class="text-left px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wide">Kondisi</th>
+                            <th class="text-center px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wide">Total Stok</th>
+                            <th class="text-center px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wide">Tersedia</th>
+                            <th class="text-center px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wide">Aksi</th>
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-gray-100">
@@ -46,23 +46,21 @@
                                 <td class="px-4 py-3 font-medium text-gray-900">{{ $item->nama_alat }}</td>
                                 <td class="px-4 py-3 text-gray-600 font-mono text-xs">{{ $item->kode_barang }}</td>
                                 <td class="px-4 py-3">
-                                    @php
-                                        $kondisiClass = match($item->kondisi) {
-                                            'baik'          => 'bg-green-100 text-green-700',
-                                            'rusak_ringan'  => 'bg-yellow-100 text-yellow-700',
-                                            'rusak_berat'   => 'bg-red-100 text-red-700',
-                                            default         => 'bg-gray-100 text-gray-700',
-                                        };
-                                        $kondisiLabel = match($item->kondisi) {
-                                            'baik'          => 'Baik',
-                                            'rusak_ringan'  => 'Rusak Ringan',
-                                            'rusak_berat'   => 'Rusak Berat',
-                                            default         => $item->kondisi,
-                                        };
-                                    @endphp
-                                    <span class="px-2 py-1 rounded-full text-xs font-medium {{ $kondisiClass }}">
-                                        {{ $kondisiLabel }}
-                                    </span>
+                                    <div class="flex flex-wrap gap-1">
+                                        <span class="px-2 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-700">
+                                            {{ $item->stok_baik }} baik
+                                        </span>
+                                        @if($item->stok_rusak_ringan > 0)
+                                            <span class="px-2 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-700">
+                                                {{ $item->stok_rusak_ringan }} ringan
+                                            </span>
+                                        @endif
+                                        @if($item->stok_rusak_berat > 0)
+                                            <span class="px-2 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-700">
+                                                {{ $item->stok_rusak_berat }} berat
+                                            </span>
+                                        @endif
+                                    </div>
                                 </td>
                                 <td class="px-4 py-3 text-center text-gray-700">{{ $item->total_stok }}</td>
                                 <td class="px-4 py-3 text-center">
@@ -71,11 +69,8 @@
                                     </span>
                                 </td>
                                 <td class="px-4 py-3 text-center">
-                                    <div class="flex justify-center gap-3 items-center">
-                                        <a href="{{ route('admin.alat.edit', $item) }}"
-                                           class="text-blue-600 hover:text-blue-800 text-xs font-medium transition-colors duration-150">
-                                            Edit
-                                        </a>
+                                    <div class="flex justify-center gap-2 items-center">
+                                        <x-tombol varian="sekunder" ukuran="sm" :href="route('admin.alat.edit', $item)">Edit</x-tombol>
                                         <x-dialog-konfirmasi
                                             judul="Hapus Alat?"
                                             :pesan="'Yakin ingin menghapus alat '.$item->nama_alat.'? Alat yang dihapus tidak akan muncul di katalog.'"
@@ -83,9 +78,7 @@
                                             aksiMetode="DELETE"
                                             labelYa="Ya, Hapus">
                                             <x-slot:trigger>
-                                                <button type="button" class="text-red-500 hover:text-red-700 text-xs font-medium transition-colors duration-150">
-                                                    Hapus
-                                                </button>
+                                                <x-tombol varian="bahaya" ukuran="sm" tipe="button">Hapus</x-tombol>
                                             </x-slot:trigger>
                                         </x-dialog-konfirmasi>
                                     </div>
@@ -102,7 +95,7 @@
 
         @else
             <div class="p-6">
-                <x-kondisi-kosong ikon="📦" judul="Belum ada alat terdaftar" pesan="Tambahkan alat pertama untuk memulai." />
+                <x-kondisi-kosong judul="Belum ada alat terdaftar" pesan="Tambahkan alat pertama untuk memulai." />
             </div>
         @endif
     </div>

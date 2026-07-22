@@ -1,7 +1,7 @@
 <x-admin-layout>
     <x-slot name="title">Edit Alat</x-slot>
 
-    <div class="max-w-2xl">
+    <div class="max-w-2xl mx-auto">
         <div class="flex items-center gap-3 mb-6">
             <a href="{{ route('admin.alat.indeks') }}" class="text-gray-400 hover:text-gray-600 text-sm transition-colors duration-150">
                 ← Kembali
@@ -10,23 +10,26 @@
         </div>
 
         <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-            <form method="PUT" action="{{ route('admin.alat.perbarui', $alat) }}">
+            <form method="POST" action="{{ route('admin.alat.perbarui', $alat) }}" enctype="multipart/form-data">
                 @csrf
                 @method('PUT')
 
                 <x-input-form label="Nama Alat" nama="nama_alat" wajib :value="old('nama_alat', $alat->nama_alat)" />
+                @if($alat->gambar_url)
+                    <div class="mb-4">
+                        <p class="block text-sm font-medium text-gray-700 mb-1">Gambar Saat Ini</p>
+                        <img src="{{ $alat->gambar_url }}" class="h-24 w-24 object-cover rounded-lg border border-gray-200">
+                    </div>
+                @endif
 
+                <x-input-form label="Ganti Gambar" nama="gambar" tipe="file" bantuan="Kosongkan kalau tidak mau ganti gambar." />
                 <x-input-form label="Kode Barang" nama="kode_barang" wajib class="font-mono" :value="old('kode_barang', $alat->kode_barang)" />
 
-                {{-- Kondisi dan Total Stok --}}
-                <div class="grid grid-cols-2 gap-4">
-                    <x-input-form label="Kondisi" nama="kondisi" tipe="select" wajib>
-                        <option value="baik" @selected(old('kondisi', $alat->kondisi) === 'baik')>Baik</option>
-                        <option value="rusak_ringan" @selected(old('kondisi', $alat->kondisi) === 'rusak_ringan')>Rusak Ringan</option>
-                        <option value="rusak_berat" @selected(old('kondisi', $alat->kondisi) === 'rusak_berat')>Rusak Berat</option>
-                    </x-input-form>
-
-                    <x-input-form label="Total Stok" nama="total_stok" tipe="number" wajib :value="old('total_stok', $alat->total_stok)" min="1" max="9999" />
+                {{-- Breakdown stok per kondisi (3 kolom) --}}
+                <div class="grid grid-cols-3 gap-4">
+                    <x-input-form label="Stok Baik" nama="stok_baik" tipe="number" wajib :value="old('stok_baik', $alat->stok_baik)" min="0" max="9999" />
+                    <x-input-form label="Stok Rusak Ringan" nama="stok_rusak_ringan" tipe="number" wajib :value="old('stok_rusak_ringan', $alat->stok_rusak_ringan)" min="0" max="9999" />
+                    <x-input-form label="Stok Rusak Berat" nama="stok_rusak_berat" tipe="number" wajib :value="old('stok_rusak_berat', $alat->stok_rusak_berat)" min="0" max="9999" />
                 </div>
 
                 {{-- Stok Tersedia — READ ONLY --}}

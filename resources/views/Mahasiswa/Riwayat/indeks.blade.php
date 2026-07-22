@@ -12,12 +12,12 @@
                 <table class="min-w-full text-sm">
                     <thead class="bg-gray-50 border-b border-gray-200">
                         <tr>
-                            <th class="text-left px-4 py-3 font-medium text-gray-600">Alat</th>
-                            <th class="text-center px-4 py-3 font-medium text-gray-600">Jml</th>
-                            <th class="text-left px-4 py-3 font-medium text-gray-600">Tgl Pinjam</th>
-                            <th class="text-left px-4 py-3 font-medium text-gray-600">Rencana Kembali</th>
-                            <th class="text-left px-4 py-3 font-medium text-gray-600">Kembali Aktual</th>
-                            <th class="text-center px-4 py-3 font-medium text-gray-600">Status</th>
+                            <th class="text-left px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wide">Alat</th>
+                            <th class="text-center px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wide">Jml</th>
+                            <th class="text-left px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wide">Tgl Pinjam</th>
+                            <th class="text-left px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wide">Rencana Kembali</th>
+                            <th class="text-left px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wide">Kembali Aktual</th>
+                            <th class="text-center px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wide">Status</th>
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-gray-100">
@@ -52,7 +52,6 @@
         </div>
     @else
         <x-kondisi-kosong
-            ikon="📋"
             judul="Belum ada riwayat"
             pesan="Yuk mulai pinjam alat pertamamu dari katalog!"
             ctaLabel="Lihat Katalog"

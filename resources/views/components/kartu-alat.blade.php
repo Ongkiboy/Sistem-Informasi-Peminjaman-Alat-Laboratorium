@@ -1,19 +1,6 @@
 @props(['alat'])
 
 @php
-    $kondisiConfig = [
-        'baik'         => ['badge' => 'bg-green-100 text-green-700', 'dot' => 'bg-green-500',  'label' => 'Baik'],
-        'rusak_ringan' => ['badge' => 'bg-yellow-100 text-yellow-700','dot' => 'bg-yellow-500', 'label' => 'Rusak Ringan'],
-        'rusak_berat'  => ['badge' => 'bg-red-100 text-red-700',     'dot' => 'bg-red-500',    'label' => 'Rusak Berat'],
-    ][$alat->kondisi] ?? ['badge' => 'bg-gray-100 text-gray-700', 'dot' => 'bg-gray-400', 'label' => $alat->kondisi];
-
-    $headerBg = match($alat->kondisi) {
-        'baik'         => 'from-blue-50 to-indigo-100',
-        'rusak_ringan' => 'from-yellow-50 to-amber-100',
-        'rusak_berat'  => 'from-red-50 to-rose-100',
-        default        => 'from-gray-50 to-gray-100',
-    };
-
     $stokHabis = $alat->stok_tersedia <= 0;
 @endphp
 
@@ -22,12 +9,12 @@
             transition-all duration-200 group flex flex-col">
 
     {{-- Header area --}}
-    <div class="h-24 bg-gradient-to-br {{ $headerBg }} flex items-center justify-center relative">
-        <span class="text-4xl select-none">🔬</span>
-
-        <span class="absolute top-2 right-2 text-[10px] font-semibold px-2 py-0.5 rounded-full {{ $kondisiConfig['badge'] }}">
-            {{ $kondisiConfig['label'] }}
-        </span>
+    <div class="h-24 bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center relative">
+        @if($alat->gambar_url)
+            <img src="{{ $alat->gambar_url }}" class="w-full h-full object-cover">
+        @else
+            <span class="text-blue-300"><x-ikon nama="beaker" ukuran="xl" /></span>
+        @endif
     </div>
 
     {{-- Content area --}}
@@ -42,7 +29,7 @@
 
         {{-- Stok indicator --}}
         <div class="mt-3 flex items-center gap-1.5">
-            <span class="h-2 w-2 rounded-full flex-shrink-0 {{ $stokHabis ? 'bg-red-400' : $kondisiConfig['dot'] }}"></span>
+            <span class="h-2 w-2 rounded-full flex-shrink-0 {{ $stokHabis ? 'bg-red-400' : 'bg-green-500' }}"></span>
             <span class="text-sm {{ $stokHabis ? 'text-red-500 font-medium' : 'text-gray-600' }}">
                 @if($stokHabis) Stok habis @else {{ $alat->stok_tersedia }} unit tersedia @endif
             </span>

@@ -1,7 +1,7 @@
 <x-mahasiswa-layout>
     <x-slot name="title">Ajukan Peminjaman</x-slot>
 
-    <div class="max-w-xl">
+    <div class="max-w-xl mx-auto">
         <div class="flex items-center gap-3 mb-6">
             <a href="{{ route('mahasiswa.katalog') }}" class="text-gray-400 hover:text-gray-600 text-sm transition-colors duration-150">
                 ← Kembali ke Katalog
@@ -15,7 +15,6 @@
             <h2 class="font-bold text-blue-800 text-base mb-2">{{ $alat->nama_alat }}</h2>
             <div class="flex gap-4 text-sm">
                 <span class="text-blue-600">Stok tersedia: <strong>{{ $alat->stok_tersedia }}</strong></span>
-                <span class="text-blue-600">Kondisi: <strong>{{ ucwords(str_replace('_', ' ', $alat->kondisi)) }}</strong></span>
             </div>
             @if($alat->deskripsi)
                 <p class="text-xs text-blue-500 mt-2">{{ $alat->deskripsi }}</p>

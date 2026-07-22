@@ -7,11 +7,13 @@
         <div class="absolute -bottom-8 right-24 h-24 w-24 rounded-full bg-white/5"></div>
 
         <div class="relative">
-            <h1 class="text-2xl md:text-3xl font-bold">Halo, {{ Auth::user()->nama }} 👋</h1>
+            <h1 class="text-2xl md:text-3xl font-bold">Halo, {{ Auth::user()->nama }}</h1>
             <p class="text-blue-100 mt-1 text-sm">Mau pinjam alat apa hari ini?</p>
 
             <form method="GET" class="mt-5 relative max-w-lg">
-                <span class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none">🔍</span>
+                <span class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none">
+                    <x-ikon nama="search" ukuran="sm" />
+                </span>
                 <input type="search"
                        name="q"
                        value="{{ request('q') }}"
@@ -45,7 +47,7 @@
                 : 'Hubungi laboran untuk informasi lebih lanjut.';
         @endphp
         <x-kondisi-kosong
-            ikon="🔍"
+            ikon="search"
             :judul="request('q') ? 'Tidak ditemukan' : 'Belum ada alat tersedia'"
             :pesan="$pesanKosong"
             :ctaLabel="request('q') ? 'Lihat semua alat' : null"

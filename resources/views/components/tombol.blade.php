@@ -1,5 +1,5 @@
 @props([
-    'varian' => 'primer', // primer | sekunder | bahaya
+    'varian' => 'primer', // primer | sekunder | bahaya | ungu | sukses
     'ukuran' => 'md',     // sm | md | lg
     'tipe' => 'button',
     'href' => null,
@@ -7,11 +7,13 @@
 ])
 
 @php
-    $base = 'inline-flex items-center justify-center gap-1.5 font-semibold rounded-lg transition-all duration-200 disabled:opacity-60 disabled:cursor-not-allowed';
+    $base = 'inline-flex items-center justify-center gap-1.5 font-semibold rounded-lg transition-all duration-200 disabled:opacity-60 disabled:cursor-not-allowed focus:outline-none';
 
     $varianClass = match ($varian) {
-        'sekunder' => 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50',
+        'sekunder' => 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50 focus:ring-2 focus:ring-gray-300',
         'bahaya'   => 'bg-red-600 text-white hover:bg-red-700 focus:ring-2 focus:ring-red-500',
+        'ungu'     => 'bg-purple-600 text-white hover:bg-purple-700 focus:ring-2 focus:ring-purple-500',
+        'sukses'   => 'bg-green-600 text-white hover:bg-green-700 focus:ring-2 focus:ring-green-500',
         default    => 'bg-blue-600 text-white hover:bg-blue-700 focus:ring-2 focus:ring-blue-500',
     };
 

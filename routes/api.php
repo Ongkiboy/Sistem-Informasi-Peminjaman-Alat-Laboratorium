@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\Api\AlatApiController;
+use App\Http\Controllers\Api\AlatController;
 use App\Http\Controllers\Api\RiwayatApiController;
 use App\Http\Controllers\Api\TokenApiController;
 use Illuminate\Support\Facades\Route;
@@ -8,13 +8,16 @@ use Illuminate\Support\Facades\Route;
 // Prefix semua route API dengan /v1
 Route::prefix('v1')->group(function () {
 
-    // Publik — Katalog Alat (tanpa auth)
-    Route::get('/alat', [AlatApiController::class, 'indeks'])
-        ->name('api.alat.indeks');
-
-    // Auth Token (publik — untuk generate token)
-    Route::post('/token', [TokenApiController::class, 'buat'])
-        ->name('api.token.buat');
+    Route::middleware('throttle:60,1')->group(function(){
+        // Publik — Katalog Alat (tanpa auth)
+        Route::get('/alat', [AlatController::class, 'indeks'])
+            ->name('api.alat.indeks');
+    
+        // Auth Token (publik — untuk generate token)
+        Route::post('/token', [TokenApiController::class, 'buat'])
+            ->name('api.token.buat')
+            ->middleware('throttle:5,1');
+    });
 
     // Privat — perlu Sanctum token
     Route::middleware(['auth:sanctum', 'throttle:60,1'])->group(function () {

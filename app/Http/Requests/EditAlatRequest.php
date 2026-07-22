@@ -2,7 +2,6 @@
 
 namespace App\Http\Requests;
 
-use App\Models\Alat;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
@@ -26,11 +25,13 @@ class EditAlatRequest extends FormRequest
                 'max:50',
                 'alpha_dash',
                 // Unique kecuali untuk alat yang sedang diedit
-                Rule::unique('alat', 'kode_barang')->ignore($alatId),
+                Rule::unique('alats', 'kode_barang')->ignore($alatId),
             ],
             'deskripsi'  => ['nullable', 'string', 'max:1000'],
-            'kondisi'    => ['required', 'in:baik,rusak_ringan,rusak_berat'],
-            'total_stok' => ['required', 'integer', 'min:1', 'max:9999'],
+            'stok_baik'         => ['required', 'integer', 'min:0', 'max:9999'],
+            'stok_rusak_ringan' => ['required', 'integer', 'min:0', 'max:9999'],
+            'stok_rusak_berat'  => ['required', 'integer', 'min:0', 'max:9999'],
+            'gambar'     => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
         ];
     }
 
@@ -38,21 +39,27 @@ class EditAlatRequest extends FormRequest
     {
         return [
             'kode_barang.unique' => 'Kode barang sudah digunakan oleh alat lain.',
-            'total_stok.min'     => 'Total stok minimal 1.',
         ];
     }
 
-    // Validasi tambahan: total_stok baru tidak boleh < stok_tersedia saat ini
+    // Validasi tambahan: total gabungan minimal 1, dan stok_baik tidak boleh < stok_tersedia saat ini
     public function withValidator($validator): void
     {
         $validator->after(function ($validator) {
-            $alatId = $this->route('alat');
-            $alat = Alat::find($alatId);
+            $alat = $this->route('alat');
+            $total = (int) $this->stok_baik + (int) $this->stok_rusak_ringan + (int) $this->stok_rusak_berat;
 
-            if ($alat && $this->total_stok < $alat->stok_tersedia) {
+            if ($total < 1) {
                 $validator->errors()->add(
-                    'total_stok',
-                    "Total stok tidak boleh lebih kecil dari stok yang sedang tersedia ({$alat->stok_tersedia})."
+                    'stok_baik',
+                    'Total stok (gabungan semua kondisi) minimal 1 unit.'
+                );
+            }
+
+            if ($alat && $this->stok_baik < $alat->stok_tersedia) {
+                $validator->errors()->add(
+                    'stok_baik',
+                    "Stok kondisi baik tidak boleh lebih kecil dari stok yang sedang tersedia dipinjam ({$alat->stok_tersedia})."
                 );
             }
         });

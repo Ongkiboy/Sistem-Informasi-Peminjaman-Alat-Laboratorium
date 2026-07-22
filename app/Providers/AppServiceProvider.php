@@ -2,6 +2,10 @@
 
 namespace App\Providers;
 
+use App\Models\Peminjaman;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -11,7 +15,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        
+
     }
 
     /**
@@ -19,6 +23,14 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        Carbon::setLocale(config('app.locale'));
+
+        View::composer('components.admin-layout', function ($view) {
+            $view->with('pendingCount', Cache::remember(
+                'admin_pending_count',
+                60,
+                fn () => Peminjaman::where('status', 'pending')->count()
+            ));
+        });
     }
 }

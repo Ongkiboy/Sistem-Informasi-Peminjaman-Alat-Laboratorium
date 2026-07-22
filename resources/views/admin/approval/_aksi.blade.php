@@ -4,38 +4,41 @@
         {{-- Setujui --}}
         <form method="POST" action="{{ route('admin.approval.setujui', $item) }}">
             @csrf
-            <button type="submit"
-                    class="text-xs font-medium px-3 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-700 text-white transition">
-                Setujui
-            </button>
+            @method('PATCH')
+            <x-tombol tipe="submit" ukuran="sm">Setujui</x-tombol>
         </form>
 
-        {{-- Tolak — trigger modal --}}
-        <button
-            type="button"
-            onclick="tampilkanModalTolak({{ $item->id }}, '{{ addslashes($item->alat->nama_alat) }}', '{{ addslashes($item->pengguna->nama) }}')"
-            class="text-xs font-medium px-3 py-1.5 rounded-lg bg-red-600 hover:bg-red-700 text-white transition">
-            Tolak
-        </button>
+        {{-- Tolak --}}
+        <x-dialog-konfirmasi
+            judul="Tolak Pengajuan?"
+            :pesan="'Yakin ingin menolak pengajuan '.$item->pengguna->nama.' untuk alat '.$item->alat->nama_alat.'? Stok akan dikembalikan otomatis.'"
+            :aksiUrl="route('admin.approval.tolak', $item)"
+            aksiMetode="PATCH"
+            labelYa="Ya, Tolak">
+            <x-slot:trigger>
+                <x-tombol varian="bahaya" ukuran="sm" tipe="button">Tolak</x-tombol>
+            </x-slot:trigger>
+        </x-dialog-konfirmasi>
 
     @elseif($item->status === 'approved')
         {{-- Konfirmasi Diambil --}}
         <form method="POST" action="{{ route('admin.approval.diambil', $item) }}">
             @csrf
-            <button type="submit"
-                    class="text-xs font-medium px-3 py-1.5 rounded-lg bg-purple-600 hover:bg-purple-700 text-white transition">
-                Konfirmasi Diambil
-            </button>
+            @method('PATCH')
+            <x-tombol varian="ungu" ukuran="sm" tipe="submit">Konfirmasi Diambil</x-tombol>
         </form>
 
     @elseif($item->status === 'borrowed')
         {{-- Konfirmasi Kembali --}}
-        <form method="POST" action="{{ route('admin.approval.kembali', $item) }}">
+        <form method="POST" action="{{ route('admin.approval.kembali', $item) }}" class="flex items-center gap-2">
             @csrf
-            <button type="submit"
-                    class="text-xs font-medium px-3 py-1.5 rounded-lg bg-green-600 hover:bg-green-700 text-white transition">
-                Konfirmasi Kembali
-            </button>
+            @method('PATCH')
+            <select name="kondisi_kembali" class="text-xs border border-gray-300 rounded-lg px-2 py-1.5 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                <option value="baik">Baik</option>
+                <option value="rusak_ringan">Rusak Ringan</option>
+                <option value="rusak_berat">Rusak Berat</option>
+            </select>
+            <x-tombol varian="sukses" ukuran="sm" tipe="submit">Konfirmasi Kembali</x-tombol>
         </form>
 
     @else

@@ -18,8 +18,11 @@ class AlatResource extends JsonResource
             'id' => $this->id,
             'nama_alat' => $this->nama_alat,
             'kode_barang' => $this->kode_barang,
-            'kondisi' => $this->kondisi,
-            'stok_tersedia' => $this->stok_tersedia
+            'stok_baik' => $this->stok_baik,
+            'stok_rusak_ringan' => $this->stok_rusak_ringan,
+            'stok_rusak_berat' => $this->stok_rusak_berat,
+            'stok_tersedia' => $this->stok_tersedia,
+            'gambar_url' => $this->gambar_url,
         ];
     }
 }

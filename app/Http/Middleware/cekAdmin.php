@@ -16,9 +16,14 @@ class cekAdmin
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if (!Auth::check() || !Auth::user()->is_admin()){
+        if (!Auth::check()){
+            return redirect()->route('login')
+            ->with('error', 'Anda harus login terlebih dahulu.');
+        }
+        
+        if (!Auth::user()->isAdmin()){
             abort(403, 'Akses ditolak. Halaman ini hanya dapat diakses oleh admin.');
-        } 
+        }
     
         return $next($request);
     }

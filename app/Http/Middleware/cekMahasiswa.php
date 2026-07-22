@@ -4,6 +4,7 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Response;
 
 class cekMahasiswa
@@ -21,7 +22,7 @@ class cekMahasiswa
         }
 
         if (!Auth::user()->isMahasiswa()){
-            abourt(403, 'Akses ditolak. Halaman ini hanya dapat diakses oleh mahasiswa.');
+            abort(403, 'Akses ditolak. Halaman ini hanya dapat diakses oleh mahasiswa.');
         }
         return $next($request);
     }

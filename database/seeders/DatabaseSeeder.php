@@ -1,8 +1,7 @@
 <?php
 
 namespace Database\Seeders;
-use App\Models\Pengguna;
-use App\Models\Alat;
+
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -16,19 +15,9 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
-
-        // User::factory()->create([
-        //     'name' => 'Test User',
-        //     'email' => 'test@example.com',
-        // ]);
-
-        Pengguna::factory()->count(10)->create();
-        Alat::factory()->count(10)->create();
-
         $this->call(
             PenggunaSeeder::class,
             AlatSeeder::class
-            );
+        );
     }
 }

@@ -11,7 +11,7 @@ beforeEach(function () {
 
 it('berhasil membuat peminjaman dan mengurangi stok', function () {
     $mahasiswa = Pengguna::factory()->create(['role' => 'mahasiswa']);
-    $Alat = Alat::factory()->create(['total_stok' => 5, 'stok_tersedia' => 5]);
+    $Alat = Alat::factory()->create(['stok_baik' =>5, 'stok_tersedia' => 5]);
 
     $peminjaman = $this->service->ajukanPeminjaman([
         'alat_id'                 => $Alat->id,
@@ -31,7 +31,7 @@ it('berhasil membuat peminjaman dan mengurangi stok', function () {
 it('mencegah stok minus saat dua request bersamaan', function () {
     $mahasiswa1 = Pengguna::factory()->create(['role' => 'mahasiswa']);
     $mahasiswa2 = Pengguna::factory()->create(['role' => 'mahasiswa']);
-    $Alat = Alat::factory()->create(['total_stok' => 1, 'stok_tersedia' => 1]);
+    $Alat = Alat::factory()->create(['stok_baik' =>1, 'stok_tersedia' => 1]);
 
     $service = new PeminjamanService();
 
@@ -74,7 +74,7 @@ it('mencegah stok minus saat dua request bersamaan', function () {
 
 it('throw StokTidakCukupException jika jumlah melebihi stok', function () {
     $mahasiswa = Pengguna::factory()->create(['role' => 'mahasiswa']);
-    $Alat = Alat::factory()->create(['total_stok' => 2, 'stok_tersedia' => 2]);
+    $Alat = Alat::factory()->create(['stok_baik' =>2, 'stok_tersedia' => 2]);
 
     expect(fn() => (new PeminjamanService())->ajukanPeminjaman([
         'alat_id'                 => $Alat->id,
@@ -90,7 +90,7 @@ it('throw StokTidakCukupException jika jumlah melebihi stok', function () {
 
 it('menolak pengajuan duplikat untuk alat yang sama', function () {
     $mahasiswa = Pengguna::factory()->create(['role' => 'mahasiswa']);
-    $Alat = Alat::factory()->create(['total_stok' => 5, 'stok_tersedia' => 5]);
+    $Alat = Alat::factory()->create(['stok_baik' =>5, 'stok_tersedia' => 5]);
 
     // Pengajuan pertama berhasil
     $this->service->ajukanPeminjaman([

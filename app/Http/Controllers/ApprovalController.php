@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Peminjaman;
 use App\Services\PeminjamanService;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 
@@ -35,13 +36,17 @@ class ApprovalController extends Controller
             ->paginate(15)
             ->withQueryString();
 
-        // Jumlah per status untuk badge di tab filter
+        // Jumlah per status untuk badge di tab filter — 1 query, bukan 5
+        $jumlahMentah = Peminjaman::select('status', DB::raw('count(*) as total'))
+            ->groupBy('status')
+            ->pluck('total', 'status');
+
         $jumlahPerStatus = [
-            'pending'  => Peminjaman::where('status', 'pending')->count(),
-            'approved' => Peminjaman::where('status', 'approved')->count(),
-            'borrowed' => Peminjaman::where('status', 'borrowed')->count(),
-            'returned' => Peminjaman::where('status', 'returned')->count(),
-            'rejected' => Peminjaman::where('status', 'rejected')->count(),
+            'pending'  => $jumlahMentah['pending'] ?? 0,
+            'approved' => $jumlahMentah['approved'] ?? 0,
+            'borrowed' => $jumlahMentah['borrowed'] ?? 0,
+            'returned' => $jumlahMentah['returned'] ?? 0,
+            'rejected' => $jumlahMentah['rejected'] ?? 0,
         ];
 
         return view('admin.approval.indeks', compact('peminjaman', 'statusFilter', 'jumlahPerStatus'));
@@ -101,16 +106,20 @@ class ApprovalController extends Controller
      * Konfirmasi alat sudah dikembalikan: borrowed → returned.
      * Stok dipulihkan oleh PeminjamanService.
      */
-    public function kembali(Peminjaman $peminjaman): RedirectResponse
+    public function kembali(Request $request, Peminjaman $peminjaman): RedirectResponse
     {
+        $request->validate([
+            'kondisi_kembali' => ['required', 'in:baik,rusak_ringan,rusak_berat'],
+        ]);
+
         try {
-            $this->peminjamanService->konfirmasiPengembalian($peminjaman);
+            $this->peminjamanService->konfirmasiPengembalian($peminjaman, $request->kondisi_kembali);
         } catch (\Exception $e) {
             return redirect()->route('admin.approval.indeks')
                 ->with('error', $e->getMessage());
         }
 
         return redirect()->route('admin.approval.indeks')
-            ->with('success', 'Alat berhasil dikembalikan. Stok otomatis bertambah.');
+            ->with('success', 'Alat berhasil dikembalikan.');
     }
 }

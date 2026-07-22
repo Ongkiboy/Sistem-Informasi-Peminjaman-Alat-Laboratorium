@@ -15,7 +15,9 @@ it('mengembalikan daftar alat tanpa autentikasi', function () {
                          'id',
                          'nama_alat',
                          'kode_barang',
-                         'kondisi',
+                         'stok_baik',
+                         'stok_rusak_ringan',
+                         'stok_rusak_berat',
                          'stok_tersedia',
                      ]
                  ],

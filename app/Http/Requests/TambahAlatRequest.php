@@ -18,8 +18,10 @@ class TambahAlatRequest extends FormRequest
             'nama_alat'   => ['required', 'string', 'max:150'],
             'kode_barang' => ['required', 'string', 'max:50', 'alpha_dash', 'unique:alats,kode_barang'],
             'deskripsi'   => ['nullable', 'string', 'max:1000'],
-            'kondisi'     => ['required', 'in:baik,rusak_ringan,rusak_berat'],
-            'total_stok'  => ['required', 'integer', 'min:1', 'max:9999'],
+            'stok_baik'         => ['required', 'integer', 'min:0', 'max:9999'],
+            'stok_rusak_ringan' => ['required', 'integer', 'min:0', 'max:9999'],
+            'stok_rusak_berat'  => ['required', 'integer', 'min:0', 'max:9999'],
+            'gambar'      => ['nullable', 'image', 'mimes:jpeg,png,jpg,webp,svg', 'max:2048'],
         ];
     }
 
@@ -30,12 +32,25 @@ class TambahAlatRequest extends FormRequest
             'kode_barang.required'  => 'Kode barang wajib diisi.',
             'kode_barang.unique'    => 'Kode barang sudah digunakan.',
             'kode_barang.alpha_dash'=> 'Kode barang hanya boleh berisi huruf, angka, dan tanda hubung.',
-            'kondisi.required'      => 'Kondisi alat wajib dipilih.',
-            'kondisi.in'            => 'Kondisi alat tidak valid.',
-            'total_stok.required'   => 'Total stok wajib diisi.',
-            'total_stok.min'        => 'Total stok minimal 1.',
-            'total_stok.integer'    => 'Total stok harus berupa angka bulat.',
+            'stok_baik.required'         => 'Stok kondisi baik wajib diisi (boleh 0).',
+            'stok_rusak_ringan.required' => 'Stok kondisi rusak ringan wajib diisi (boleh 0).',
+            'stok_rusak_berat.required'  => 'Stok kondisi rusak berat wajib diisi (boleh 0).',
         ];
+    }
+
+    // Validasi tambahan: total gabungan ketiga kondisi minimal 1 unit
+    public function withValidator($validator): void
+    {
+        $validator->after(function ($validator) {
+            $total = (int) $this->stok_baik + (int) $this->stok_rusak_ringan + (int) $this->stok_rusak_berat;
+
+            if ($total < 1) {
+                $validator->errors()->add(
+                    'stok_baik',
+                    'Total stok (gabungan semua kondisi) minimal 1 unit.'
+                );
+            }
+        });
     }
 
     // Transformasi input sebelum validasi (uppercase kode_barang)

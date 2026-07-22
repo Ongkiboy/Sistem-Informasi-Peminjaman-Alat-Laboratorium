@@ -19,7 +19,7 @@ beforeEach(function () {
 it('mengembalikan stok saat pengajuan ditolak', function () {
     // Arrange
     $alat = Alat::factory()->create([
-        'total_stok'    => 10,
+        'stok_baik'     => 10,
         'stok_tersedia' => 7,   // 3 unit sedang dalam proses pending
     ]);
 
@@ -45,7 +45,7 @@ it('mengembalikan stok saat pengajuan ditolak', function () {
 
 it('status berubah menjadi rejected setelah ditolak', function () {
     $alat = Alat::factory()->create([
-        'total_stok'    => 5,
+        'stok_baik'     => 5,
         'stok_tersedia' => 3,
     ]);
     $mahasiswa  = Pengguna::factory()->create(['role' => 'mahasiswa']);
@@ -76,13 +76,13 @@ it('tidak bisa tolak pengajuan yang bukan pending', function () {
 });
 
 // ─────────────────────────────────────────────────────────────────────────────
-//TEST-005: konfirmasiPengembalian() — guard stok tidak melebihi total
+//TEST-005: konfirmasiPengembalian() — guard stok tidak melebihi stok_baik
 // ─────────────────────────────────────────────────────────────────────────────
 
-it('stok tidak melebihi total_stok saat konfirmasi pengembalian', function () {
-    // Simulasi edge case: stok_tersedia sudah 9, dikembalikan 3 → harusnya cap di total_stok=10
+it('stok tidak melebihi stok_baik saat konfirmasi pengembalian', function () {
+    // Simulasi edge case: stok_tersedia sudah 9, dikembalikan 3 → harusnya cap di stok_baik=10
     $alat = Alat::factory()->create([
-        'total_stok'    => 10,
+        'stok_baik'     => 10,
         'stok_tersedia' => 9,   // sudah hampir penuh
     ]);
 
@@ -102,7 +102,7 @@ it('stok tidak melebihi total_stok saat konfirmasi pengembalian', function () {
 
 it('status berubah menjadi returned dan tanggal_kembali_aktual terisi', function () {
     $alat = Alat::factory()->create([
-        'total_stok'    => 5,
+        'stok_baik'     => 5,
         'stok_tersedia' => 2,
     ]);
     $mahasiswa  = Pengguna::factory()->create(['role' => 'mahasiswa']);

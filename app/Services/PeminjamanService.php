@@ -72,10 +72,10 @@ class PeminjamanService
 			// Lock baris alat sebelum ubah stok
 			$alat = $peminjaman->alat()->lockForUpdate()->first();
 
-			// Kembalikan stok — guard agar tidak melebihi total_stok
+			// Kembalikan stok — guard agar tidak melebihi stok_baik (cuma unit baik yang boleh dipinjamkan)
 			$stokBaru = min(
 				$alat->stok_tersedia + $peminjaman->jumlah,
-				$alat->total_stok
+				$alat->stok_baik
 			);
 			$alat->update(['stok_tersedia' => $stokBaru]);
 
@@ -97,23 +97,32 @@ class PeminjamanService
 			'tanggal_diambil' => now(),
 		]);
 	}
-	public function konfirmasiPengembalian(Peminjaman $peminjaman): void
+	public function konfirmasiPengembalian(Peminjaman $peminjaman, string $kondisiKembali = 'baik'): void
 	{
 		// Guard: hanya bisa dari status borrowed
 		if ($peminjaman->status !== 'borrowed') {
 			throw new \Exception('Hanya pengajuan berstatus borrowed yang bisa dikonfirmasi kembali.');
 		}
 
-		DB::transaction(function () use ($peminjaman) {
+		DB::transaction(function () use ($peminjaman, $kondisiKembali) {
 			$alat = $peminjaman->alat()->lockForUpdate()->first();
 
-			// Guard wajib: stok_tersedia tidak boleh melebihi total_stok
-			$stokBaru = min(
-				$alat->stok_tersedia + $peminjaman->jumlah,
-				$alat->total_stok
-			);
-
-			$alat->update(['stok_tersedia' => $stokBaru]);
+			if ($kondisiKembali === 'baik') {
+				// Balik ke pool baik — guard wajib: stok_tersedia tidak boleh melebihi stok_baik
+				$stokBaru = min(
+					$alat->stok_tersedia + $peminjaman->jumlah,
+					$alat->stok_baik
+				);
+				$alat->update(['stok_tersedia' => $stokBaru]);
+			} else {
+				// Balik dalam kondisi rusak — pindahkan unit dari pool baik ke pool rusak yang dipilih.
+				// stok_tersedia TIDAK ditambah karena unit rusak tidak tersedia dipinjam lagi.
+				$kolomRusak = $kondisiKembali === 'rusak_ringan' ? 'stok_rusak_ringan' : 'stok_rusak_berat';
+				$alat->update([
+					'stok_baik' => max(0, $alat->stok_baik - $peminjaman->jumlah),
+					$kolomRusak => $alat->{$kolomRusak} + $peminjaman->jumlah,
+				]);
+			}
 
 			$peminjaman->update([
 				'status'                 => 'returned',

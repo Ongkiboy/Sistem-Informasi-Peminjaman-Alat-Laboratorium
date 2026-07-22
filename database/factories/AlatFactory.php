@@ -2,13 +2,13 @@
 
 namespace Database\Factories;
 
-use App\Models\alat;
+use App\Models\Alat;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends Factory<alat>
+ * @extends Factory<Alat>
  */
-class alatFactory extends Factory
+class AlatFactory extends Factory
 {
     /**
      * Define the model's default state.
@@ -17,15 +17,16 @@ class alatFactory extends Factory
      */
     public function definition(): array
     {
-        $totalStok = fake()->numberBetween(1, 50);
+        $stokBaik = fake()->numberBetween(1, 30);
 
         return [
-            'nama_alat'     => fake()->words(3, true),
-            'kode_barang'   => strtoupper(fake()->unique()->bothify('???-###')),
-            'deskripsi'     => fake()->sentence(),
-            'kondisi'       => fake()->randomElement(['baik', 'rusak_ringan', 'rusak_berat']),
-            'total_stok'    => $totalStok,
-            'stok_tersedia' => fake()->numberBetween(0, $totalStok),
+            'nama_alat'         => fake()->words(3, true),
+            'kode_barang'       => strtoupper(fake()->unique()->bothify('???-###')),
+            'deskripsi'         => fake()->sentence(),
+            'stok_baik'         => $stokBaik,
+            'stok_rusak_ringan' => fake()->numberBetween(0, 5),
+            'stok_rusak_berat'  => fake()->numberBetween(0, 3),
+            'stok_tersedia'     => fake()->numberBetween(0, $stokBaik),
         ];
     }
 }

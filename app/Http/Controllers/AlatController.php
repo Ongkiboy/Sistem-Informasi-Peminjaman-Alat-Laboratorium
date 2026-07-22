@@ -8,6 +8,7 @@ use App\Models\Alat;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
 
 class AlatController extends Controller
@@ -33,9 +34,13 @@ class AlatController extends Controller
 
     public function simpan(TambahAlatRequest $request): RedirectResponse
     {
+        $data = $request->validated();
+        if ($request->hasFile('gambar')) {
+            $data['gambar'] = $request->file('gambar')->store('alat', 'public');
+        }
         Alat::create([
-            ...$request->validated(),
-            'stok_tersedia' => $request->total_stok, // otomatis = total_stok saat pertama buat
+            ...$data,
+            'stok_tersedia' => $data['stok_baik'], // otomatis = stok_baik saat pertama buat (cuma unit baik yang bisa dipinjam)
             'dibuat_oleh'   => Auth::id(),
         ]);
 
@@ -50,7 +55,17 @@ class AlatController extends Controller
 
     public function perbarui(EditAlatRequest $request, Alat $alat): RedirectResponse
     {
-        $alat->update($request->validated());
+        $data = collect($request->validated())
+            ->except('gambar')
+            ->toArray();
+        if ($request->hasFile('gambar')){
+            if ($alat->gambar) {
+                Storage::disk('public')->delete($alat->gambar);
+            }
+            $data['gambar'] = $request->file('gambar')
+                ->store('alat', 'public');
+        }
+        $alat->update($data);
 
         return redirect()->route('admin.alat.indeks')
             ->with('success', 'Data alat berhasil diperbarui.');
